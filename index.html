@@ -25,33 +25,46 @@
   }
 
   #button-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 40px; /* space between buttons */
-    margin-top: 20px;
     position: relative;
+    width: 400px;
+    height: 80px;
+    margin-top: 20px;
   }
 
-  button {
+  #yes {
+    position: fixed; /* stays fixed in place */
+    left: 35%;
+    top: 55%;
+    transform: translate(-50%, -50%);
     padding: 15px 30px;
     font-size: 1.2em;
+    background-color: #ff4d94;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 5px 12px rgba(0,0,0,0.2);
+    transition: transform 0.3s;
+  }
+
+  #yes:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+
+  #no {
+    position: absolute; /* will move around */
+    left: 200px; /* initial inside container */
+    top: 0;
+    padding: 15px 30px;
+    font-size: 1.2em;
+    background-color: #cccccc;
+    color: black;
     border: none;
     border-radius: 8px;
     cursor: pointer;
     font-weight: bold;
     transition: all 0.3s;
-  }
-
-  #yes {
-    background-color: #ff4d94;
-    color: white;
-  }
-
-  #no {
-    background-color: #cccccc;
-    color: black;
-    position: relative; /* initially relative to flex container */
   }
 
   .confetti {
@@ -75,22 +88,22 @@
 <h1>Will you be my Valentine?</h1>
 
 <div id="button-container">
-  <button id="yes">Yes</button>
   <button id="no">No</button>
 </div>
+<button id="yes">Yes</button>
 
 <script>
 const yesBtn = document.getElementById('yes');
 const noBtn = document.getElementById('no');
 const body = document.body;
 
-// Predefined positions for No button (after first click)
+// Predefined positions for No button
 const positions = [
   {left: 50, top: 100},
-  {left: 10, top: 150},
-  {left: 100, top: 100},
-  {left: 200, top: -100},
-  {left: -50, top: -300}
+  {left: 200, top: 150},
+  {left: 100, top: 300},
+  {left: 250, top: 400},
+  {left: 50, top: 500}
 ];
 
 // Messages inside No button
@@ -105,18 +118,11 @@ const noMessages = [
 let clickCount = 0;
 
 noBtn.addEventListener('click', () => {
-  if(clickCount === 0) {
-    // make No absolute to move freely
-    const rect = noBtn.getBoundingClientRect();
-    noBtn.style.position = "absolute";
-    noBtn.style.left = rect.left + "px";
-    noBtn.style.top = rect.top + "px";
-  }
-
   if(clickCount < positions.length) {
     noBtn.style.left = positions[clickCount].left + 'px';
     noBtn.style.top = positions[clickCount].top + 'px';
     noBtn.textContent = noMessages[clickCount];
+    // tilt sideways between -15 and +15 degrees
     const angle = (Math.random() * 30) - 15;
     noBtn.style.transform = `rotate(${angle}deg)`;
     clickCount++;
@@ -127,7 +133,7 @@ noBtn.addEventListener('click', () => {
   }
 });
 
-// Yes button clicked -> confetti only
+// Yes button clicked -> confetti + final message
 yesBtn.addEventListener('click', () => {
   body.style.backgroundColor = 'black';
   body.innerHTML = '<h1>Yay! 💖 You are my Valentine!</h1>';
@@ -141,6 +147,18 @@ yesBtn.addEventListener('click', () => {
     confetti.style.animationDuration = 2 + Math.random() * 3 + 's';
     body.appendChild(confetti);
   }
+
+  // Add image after 1 second
+  setTimeout(() => {
+    const img = document.createElement('img');
+    img.src = "https://i.imgur.com/4AiXzf8.jpeg"; // replace with your image
+    img.alt = "Valentine Image";
+    img.style.marginTop = "20px";
+    img.style.maxWidth = "80%";
+    img.style.borderRadius = "12px";
+    img.style.boxShadow = "0 5px 15px rgba(0,0,0,0.3)";
+    body.appendChild(img);
+  }, 1000);
 });
 </script>
 
