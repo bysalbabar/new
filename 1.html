@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valentine's Day</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #ffe6e6;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  h1 {
+    font-size: 2.5em;
+    margin: 10px 0;
+    color: #e60073;
+  }
+
+  #button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px; /* space between buttons */
+    margin-top: 20px;
+    position: relative;
+  }
+
+  button {
+    padding: 15px 30px;
+    font-size: 1.2em;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s;
+  }
+
+  #yes {
+    background-color: #ff4d94;
+    color: white;
+  }
+
+  #no {
+    background-color: #cccccc;
+    color: black;
+    position: relative; /* initially relative to flex container */
+  }
+
+  .confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #ff4d94;
+    animation: fall 3s linear infinite;
+  }
+
+  @keyframes fall {
+    0% {transform: translateY(0) rotate(0deg);}
+    100% {transform: translateY(600px) rotate(360deg);}
+  }
+</style>
+</head>
+<body>
+
+<h1>MOLUTTY</h1>
+<h1>Will you be my Valentine?</h1>
+
+<div id="button-container">
+  <button id="yes">Yes</button>
+  <button id="no">No</button>
+</div>
+
+<script>
+const yesBtn = document.getElementById('yes');
+const noBtn = document.getElementById('no');
+const body = document.body;
+
+// Predefined positions for No button (after first click)
+const positions = [
+  {left: 50, top: 100},
+  {left: 10, top: 150},
+  {left: 100, top: 100},
+  {left: 200, top: -100},
+  {left: -50, top: -300}
+];
+
+// Messages inside No button
+const noMessages = [
+  "Really?",
+  "Are you sure?",
+  "Come on!",
+  "Maybe reconsider?",
+  "Last chance!"
+];
+
+let clickCount = 0;
+
+noBtn.addEventListener('click', () => {
+  if(clickCount === 0) {
+    // make No absolute to move freely
+    const rect = noBtn.getBoundingClientRect();
+    noBtn.style.position = "absolute";
+    noBtn.style.left = rect.left + "px";
+    noBtn.style.top = rect.top + "px";
+  }
+
+  if(clickCount < positions.length) {
+    noBtn.style.left = positions[clickCount].left + 'px';
+    noBtn.style.top = positions[clickCount].top + 'px';
+    noBtn.textContent = noMessages[clickCount];
+    const angle = (Math.random() * 30) - 15;
+    noBtn.style.transform = `rotate(${angle}deg)`;
+    clickCount++;
+  } else {
+    noBtn.disabled = true;
+    noBtn.textContent = "No 😅";
+    noBtn.style.transform = "rotate(0deg)";
+  }
+});
+
+// Yes button clicked -> confetti + image
+yesBtn.addEventListener('click', () => {
+  body.style.backgroundColor = 'black';
+  body.innerHTML = '<h1>Yay! 💖 You are my Valentine!</h1>';
+
+  // Confetti explosion
+  for(let i=0; i<100; i++){
+    const confetti = document.createElement('div');
+    confetti.classList.add('confetti');
+    confetti.style.left = Math.random() * window.innerWidth + 'px';
+    confetti.style.backgroundColor = `hsl(${Math.random()*360},100%,50%)`;
+    confetti.style.animationDuration = 2 + Math.random() * 3 + 's';
+    body.appendChild(confetti);
+  }
+
+  // Add image after 1 second
+  setTimeout(() => {
+    const img = document.createElement('img');
+    img.src = "https://i.imgur.com/4AiXzf8.jpeg"; // replace with your image
+    img.alt = "Valentine Image";
+    img.style.marginTop = "20px";
+    img.style.maxWidth = "80%";
+    img.style.borderRadius = "12px";
+    img.style.boxShadow = "0 5px 15px rgba(0,0,0,0.3)";
+    body.appendChild(img);
+  }, 1000);
+});
+</script>
+
+</body>
+</html>
